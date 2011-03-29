@@ -5,7 +5,20 @@
  * @author aheadley
  */
 abstract class NBT_SequenceTag extends NBT_Tag
-  implements ArrayAccess {
+  implements ArrayAccess, Countable, IteratorAggregate {
+
+  public function __toString() {
+    return sprintf( '%s[%s]', parent::__toString(), implode( ', ', $this->_data ) );
+  }
+
+  public function count() {
+    return count( $this->_data );
+  }
+
+  public function getIterator() {
+    //TODO: make custom Tag iterator
+    return new ArrayIterator( $this->_data );
+  }
 
   public function offsetExists( $offset ) {
     return array_key_exists( $offset, $this->_data );

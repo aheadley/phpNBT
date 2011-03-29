@@ -18,6 +18,7 @@ abstract class NBT_Tag {
   const TYPE_LIST       = 9;
   const TYPE_COMPOUND   = 10;
 
+  protected $_type  = null;
   protected $_name  = null;
   protected $_data  = null;
 
@@ -45,6 +46,7 @@ abstract class NBT_Tag {
         return 'NBT_Tag_Long';
         break;
       case self::TYPE_BYTE_ARRAY;
+        return 'NBT_Tag_ByteArray';
         break;
       case self::TYPE_STRING:
         return 'NBT_Tag_String';
@@ -61,12 +63,20 @@ abstract class NBT_Tag {
   }
 
   public function __construct( $data, $name = null ) {
-    $this->_name = $name;
+    $this->_type = new NBT_Tag_Byte( $this->getType() );
     $this->set( $data );
+    if( !is_null( $name ) ) {
+      $this->_name = new NBT_Tag_String( $name );
+    }
   }
 
   public function __toString() {
-    return sprintf( '%s(%s)', get_class( $this ), $this->get() );
+    if( !is_null( $this->_name ) ) {
+      return sprintf( '%s(%s:%s)', get_class( $this ), $this->_name->get(),
+        $this->get() );
+    } else {
+      return sprintf( '%s(%s)', get_class( $this ), $this->get() );
+    }
   }
 
   public function get() {
@@ -76,11 +86,11 @@ abstract class NBT_Tag {
   public function getType() {
     return self::$_tagType;
   }
-  
-  abstract public function set( $value );
-  abstract public function out();
-  abstract public function in( $data );
 
-  abstract protected function _getStructFormat();
-  abstract protected function _getByteCount();
+  public function write( $handle ) {
+    $this->_type->write( $handle );
+  }
+
+  abstract public function set( $value );
+  abstract static public function parse( $handle );
 }

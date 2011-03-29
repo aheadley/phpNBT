@@ -6,7 +6,19 @@
  */
 class NBT_Tag_List extends NBT_SequenceTag {
   static private $_tagType  = NBT_Tag::TYPE_LIST;
-  private $_containingType = null;
+  private $_containingType  = null;
+  private $_dataLength      = null;
+
+  static public function parse( $handle ) {
+    $containingType = NBT_Tag_Byte::parse( $handle )->get();
+    $containingTypeClass = NBT_Tag::getTypeClass( $containingType );
+    $length = NBT_Tag_Int::parse( $handle )->get();
+    $data = array();
+    for( $i = 0; $i < $length; $i++ ) {
+      $data[] = $containingTypeClass::parse( $handle );
+    }
+    return new NBT_Tag_List( $containingType, $data );
+  }
 
   public function __construct( $containingType, array $data, $name = null ) {
     parent::__construct( $data, $name );
@@ -33,10 +45,20 @@ class NBT_Tag_List extends NBT_SequenceTag {
 
   public function set( array $value ) {
     foreach( $value as $tag ) {
-      if( $this->_containingType !== $tag->getType() ) {
+      if( $tag->getType() !== $this->_containingType ) {
         throw new NBT_Tag_Exception( "Invalid tag type for tag list: " . get_class( $tag ) );
       }
     }
+    $this->_dataLength = new NBT_Tag_Int( count( $this->_data ) );
     $this->_data = $value;
+  }
+
+  public function write( $handle ) {
+    parent::write( $handle );
+    $this->_containingType->write( $handle );
+    $this->_dataLength->write( $handle );
+    foreach( $this->_data as $tag ) {
+      $tag->write( $handle );
+    }
   }
 }

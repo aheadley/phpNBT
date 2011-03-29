@@ -4,27 +4,31 @@
  *
  * @author aheadley
  */
-class NBT_Tag_Byte extends NBT_Tag {
+class NBT_Tag_Byte extends NBT_Tag_Finite {
   static private $_tagType = NBT_Tag::TYPE_BYTE;
   
-  public function set( $value ) {
-    parent::set( $value );
-  }
-
-  public function in( $data ) {
-    list(, $value) = unpack( $this->_getStructFormat(), $this->_getByteCount() );
-    $this->set( $value );
-  }
-
-  public function out() {
-    return pack( $this->_getStructFormat(), $this->get() );
-  }
-
-  protected function _getStructFormat() {
+  static public function getStructFormat() {
     return 'c';
   }
 
-  protected function _getByteCount() {
+  static public function getByteCount() {
     return 1;
+  }
+
+  public function __construct( $data, $name = null ) {
+    $this->set( $data );
+    if( !is_null( $name ) ) {
+      $this->_name = new NBT_Tag_String( $name );
+    }
+  }
+
+  public function set( $value ) {
+    $this->_data = $value & 0xFF;
+  }
+
+  public function write( $handle ) {
+    if( !fwrite( $handle, pack( self::getStructFormat(), $this->_data ) ) ) {
+      throw new NBT_Tag_Exception( "Failed to write tag data: {$this->_data}" );
+    }
   }
 }
