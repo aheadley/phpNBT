@@ -4,8 +4,8 @@
  *
  * @author aheadley
  */
-class NBT_Tag_Short extends NBT_Tag_Finite {
-  static private $_tagType = NBT_Tag::TYPE_SHORT;
+class NBT_Tag_Short extends NBT_FiniteTag {
+  static protected $_tagType = NBT_Tag::TYPE_SHORT;
 
   static public function getStructFormat() {
     return 'n';

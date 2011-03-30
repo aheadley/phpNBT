@@ -4,7 +4,7 @@
  *
  * @author aheadley
  */
-class NBT_Tag_Int extends NBT_Tag_Finite {
+class NBT_Tag_Int extends NBT_FiniteTag {
   static protected $_tagType = NBT_Tag::TYPE_INT;
 
   static public function getStructFormat() {

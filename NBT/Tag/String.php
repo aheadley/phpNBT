@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_String extends NBT_Tag {
-  static private $_tagType = NBT_Tag::TYPE_STRING;
+  static protected $_tagType = NBT_Tag::TYPE_STRING;
 
   private $_dataLength  = null;
 

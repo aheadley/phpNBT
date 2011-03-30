@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_List extends NBT_SequenceTag {
-  static private $_tagType  = NBT_Tag::TYPE_LIST;
+  static protected $_tagType  = NBT_Tag::TYPE_LIST;
   private $_containingType  = null;
   private $_dataLength      = null;
 
@@ -49,7 +49,7 @@ class NBT_Tag_List extends NBT_SequenceTag {
         throw new NBT_Tag_Exception( "Invalid tag type for tag list: " . get_class( $tag ) );
       }
     }
-    $this->_dataLength = new NBT_Tag_Int( count( $this->_data ) );
+    $this->_dataLength = new NBT_Tag_Int( count( $value ) );
     $this->_data = $value;
   }
 

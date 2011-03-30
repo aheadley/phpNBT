@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_Compound extends NBT_Tag_Sequence {
-  static private $_tagType = NBT_Tag::TYPE_COMPOUND;
+  static protected $_tagType = NBT_Tag::TYPE_COMPOUND;
 
   static public function parse( $handle ) {
     $tags = array();
@@ -17,6 +17,14 @@ class NBT_Tag_Compound extends NBT_Tag_Sequence {
 
   public function __construct( array $data, $name = null ) {
     parent::__construct( $data, $name );
+  }
+
+  public function __get( $name ) {
+    return $this[$name];
+  }
+
+  public function __set( $name, $value ) {
+    $this[$name] = $value;
   }
 
   public function set( array $value ) {

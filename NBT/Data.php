@@ -11,9 +11,9 @@ class NBT_Data {
   private $_handle            = null;
   private $_compressionMethod = null;
 
-  public function __construct( $fp,
+  public function __construct( $handle,
                                  $compressionMethod = self::VERSION_GZIP ) {
-    $this->_handle = $fp;
+    $this->_handle = $handle;
     $this->_compressionMethod = $compressionMethod;
     $this->_parse();
   }
@@ -21,18 +21,6 @@ class NBT_Data {
   public function __toString() {
     //TODO: need to add in compression method here
     return "NBT_Data({$this->_data})";
-  }
-
-  public function out() {
-    switch( $this->_compressionMethod ) {
-      case self::VERSION_GZIP:
-        return gzdeflate( $this->_data->out() );
-        break;
-      case self::VERSION_ZLIB:
-        //TODO: no idea here
-        throw Exception( 'NYI' );
-        break;
-    }
   }
 
   private function _parse() {

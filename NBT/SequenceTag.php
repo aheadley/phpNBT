@@ -27,6 +27,8 @@ abstract class NBT_SequenceTag extends NBT_Tag
   public function offsetGet( $offset ) {
     if( $this->offsetExists( $offset ) ) {
       return $this->_data[$offset];
+    } else {
+      throw new NBT_Tag_Exception( "Invalid offset: {$offset}" );
     }
   }
 

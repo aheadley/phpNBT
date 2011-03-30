@@ -4,8 +4,8 @@
  *
  * @author aheadley
  */
-class NBT_Tag_Byte extends NBT_Tag_Finite {
-  static private $_tagType = NBT_Tag::TYPE_BYTE;
+class NBT_Tag_Byte extends NBT_FiniteTag {
+  static protected $_tagType = NBT_Tag::TYPE_BYTE;
   
   static public function getStructFormat() {
     return 'c';
