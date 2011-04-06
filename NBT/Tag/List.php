@@ -9,15 +9,20 @@ class NBT_Tag_List extends NBT_SequenceTag {
   private $_containingType  = null;
   private $_dataLength      = null;
 
-  static public function parse( $handle ) {
-    $containingType = NBT_Tag_Byte::parse( $handle )->get();
+  static public function parse( $handle, $hasName = true ) {
+    if( $hasName ) {
+      $name = NBT_Tag_String::parse( $handle, false );
+    } else {
+      $name = null;
+    }
+    $containingType = NBT_Tag_Byte::parse( $handle, false )->get();
     $containingTypeClass = NBT_Tag::getTypeClass( $containingType );
-    $length = NBT_Tag_Int::parse( $handle )->get();
+    $length = NBT_Tag_Int::parse( $handle, false )->get();
     $data = array();
     for( $i = 0; $i < $length; $i++ ) {
-      $data[] = $containingTypeClass::parse( $handle );
+      $data[] = $containingTypeClass::parse( $handle, false );
     }
-    return new NBT_Tag_List( $containingType, $data );
+    return new NBT_Tag_List( $containingType, $data, $name );
   }
 
   public function __construct( $containingType, array $data, $name = null ) {
@@ -43,7 +48,7 @@ class NBT_Tag_List extends NBT_SequenceTag {
     }
   }
 
-  public function set( array $value ) {
+  public function set( $value ) {
     foreach( $value as $tag ) {
       if( $tag->getType() !== $this->_containingType ) {
         throw new NBT_Tag_Exception( "Invalid tag type for tag list: " . get_class( $tag ) );

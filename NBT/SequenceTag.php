@@ -32,8 +32,12 @@ abstract class NBT_SequenceTag extends NBT_Tag
     }
   }
 
-  public function offsetSet( $offset, NBT_Tag $value ) {
-    $this->_data[$offset] = $value;
+  public function offsetSet( $offset, $value ) {
+    if( !( $value instanceof NBT_Tag ) ) {
+      throw new NBT_Tag_Exception( "Invalid value type: {$value}" );
+    } else {
+      $this->_data[$offset] = $value;
+    }
   }
 
   public function offsetUnset( $offset ) {

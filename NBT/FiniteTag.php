@@ -13,16 +13,21 @@ abstract class NBT_FiniteTag extends NBT_Tag {
   abstract static public function getStructFormat();
   abstract static public function getByteCount();
 
-  static public function parse( $handle ) {
-    list(, $data ) = unpack( self::getStructFormat(),
-      fread( $handle, self::getByteCount() ) );
-    $tagClass = self::getTypeClass( self::$_tagType );
-    return new $tagClass( $data );
+  static public function parse( $handle, $hasName = true ) {
+    if( $hasName ) {
+      $name = NBT_Tag_String::parse( $handle );
+    } else {
+      $name = null;
+    }
+    list(, $data ) = unpack( static::getStructFormat(),
+      fread( $handle, static::getByteCount() ) );
+    $tagClass = static::getTypeClass( static::$_tagType );
+    return new $tagClass( $data, $name );
   }
 
   public function write( $handle ) {
     parent::write( $handle );
-    if( !fwrite( $handle, pack( self::getStructFormat(), $this->_data ) ) ) {
+    if( !fwrite( $handle, pack( static::getStructFormat(), $this->_data ) ) ) {
       throw new NBT_Tag_Exception( "Failed to write tag data: {$this->_data}" );
     }
   }

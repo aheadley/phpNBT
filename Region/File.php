@@ -8,6 +8,10 @@ class Region_File {
     $this->_filename = $filename;
   }
 
+  public function __toString() {
+    return "Region_File({$this->_filename})";
+  }
+
   public function getChunk( $x, $y ) {
     return $this->_chunks[$x][$y];
   }

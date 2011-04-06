@@ -9,13 +9,22 @@ class NBT_Tag_String extends NBT_Tag {
 
   private $_dataLength  = null;
 
-  static public function parse( $handle ) {
-    return new NBT_Tag_String( utf8_decode( fread( $handle,
-      NBT_Tag_Short::parse( $handle )->get() ) ) );
+  static public function parse( $handle, $hasName = true ) {
+    if( $hasName ) {
+      $name = NBT_Tag_String::parse( $handle, false );
+    } else {
+      $name = null;
+    }
+    $length = NBT_Tag_Short::parse( $handle, false )->get();
+    if( $length > 0 ) {
+      return new NBT_Tag_String( utf8_decode( fread( $handle, $length ) ), $name );
+    } else {
+      return new NBT_Tag_String( null, $name );
+    }
   }
 
   public function set( $value ) {
-    $this->_dataLength = NBT_Tag_Short( strlen( $value ) );
+    $this->_dataLength = new NBT_Tag_Short( strlen( $value ) );
     $this->_data = $value;
   }
 

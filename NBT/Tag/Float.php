@@ -15,11 +15,16 @@ class NBT_Tag_Float extends NBT_FiniteTag {
     return 4;
   }
 
-  static public function parse( $handle ) {
+  static public function parse( $handle, $hasName = true ) {
+    if( $hasName ) {
+      $name = NBT_Tag_String::parse( $handle, false );
+    } else {
+      $name = null;
+    }
     list(, $value ) = unpack( self::getStructFormat(),
       self::endianTransform( fread( $handle, self::getByteCount() ) ) );
     $tagClass = self::getTypeClass( self::$_tagType );
-    return new $tagClass( $value );
+    return new $tagClass( $value, $name );
   }
 
   public function write( $handle ) {

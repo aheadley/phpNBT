@@ -21,6 +21,10 @@ class NBT_File {
     }
   }
 
+  public function __toString() {
+    return "NBT_File({$this->_filename}, {$this->_data})";
+  }
+
   public function write( $filename = null ) {
     if( is_null( $filename ) ) {
       $filename = $this->_filename;

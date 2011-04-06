@@ -66,16 +66,20 @@ abstract class NBT_Tag {
     $this->_type = new NBT_Tag_Byte( $this->getType() );
     $this->set( $data );
     if( !is_null( $name ) ) {
-      $this->_name = new NBT_Tag_String( $name );
+      if( $name instanceof NBT_Tag_String ) {
+        $this->_name = $name;
+      } else {
+        $this->_name = new NBT_Tag_String( $name );
+      }
     }
   }
 
   public function __toString() {
+
     if( !is_null( $this->_name ) ) {
-      return sprintf( '%s(%s:%s)', get_class( $this ), $this->_name->get(),
-        $this->get() );
+      return sprintf( '%s(%s)', get_class( $this ), $this->_name->get() );
     } else {
-      return sprintf( '%s(%s)', get_class( $this ), $this->get() );
+      return sprintf( '%s()', get_class( $this ) );
     }
   }
 
@@ -84,7 +88,7 @@ abstract class NBT_Tag {
   }
 
   public function getType() {
-    return self::$_tagType;
+    return static::$_tagType;
   }
 
   public function write( $handle ) {

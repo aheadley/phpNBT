@@ -8,13 +8,18 @@ class NBT_Tag_ByteArray extends NBT_SequenceTag {
   static protected $_tagType  = NBT_Tag::TYPE_BYTE_ARRAY;
   private $_dataLength  = null;
 
-  static public function parse( $handle ) {
+  static public function parse( $handle, $hasName = true ) {
+    if( $hasName ) {
+      $name = NBT_Tag_String::parse( $handle, false );
+    } else {
+      $name = null;
+    }
     $length = NBT_Tag_Int::parse( $handle );
     $data = array();
     for( $i = 0; $i < $length->get(); $i++ ) {
-      $data[] = NBT_Tag_Byte::parse( $handle );
+      $data[] = NBT_Tag_Byte::parse( $handle, false );
     }
-    return new NBT_Tag_ByteArray( $data );
+    return new NBT_Tag_ByteArray( $data, $name );
   }
 
   public function __construct( array $data, $name = null ) {
