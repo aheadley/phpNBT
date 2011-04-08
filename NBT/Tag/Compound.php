@@ -4,6 +4,7 @@
  *
  * @author aheadley
  */
+
 class NBT_Tag_Compound extends NBT_SequenceTag {
   
   static protected $_tagType  = self::TYPE_COMPOUND;

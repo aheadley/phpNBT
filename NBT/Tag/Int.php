@@ -4,6 +4,7 @@
  *
  * @author aheadley
  */
+
 class NBT_Tag_Int extends NBT_FiniteTag {
   static protected $_tagType  = self::TYPE_INT;
 

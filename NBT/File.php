@@ -9,17 +9,9 @@ class NBT_File extends NBT_Data {
 
   public function __construct( $filename ) {
     $this->_filename = $filename;
-    if( file_exists( $this->_filename ) ) {
-      if( is_readable( $this->_filename ) ) {
-        $handle = fopen( "compress.zlib://{$this->_filename}", 'rb' );
-        parent::__construct( $handle );
-        fclose( $handle );
-      } else {
-        throw new NBT_Exception( "Unable to read file: {$this->_filename}" );
-      }
-    } else {
-      $this->_data = new NBT_Data( null );
-    }
+    $handle = fopen( "compress.zlib://{$this->_filename}", 'rb' );
+    parent::__construct( $handle );
+    fclose( $handle );
   }
 
   public function __toString() {
