@@ -14,4 +14,8 @@ class NBT_Tag_Double extends NBT_Tag_Float {
   static public function getByteCount() {
     return 8;
   }
+
+  public function set( $value ) {
+    $this->_data = doubleval( $value );
+  }
 }

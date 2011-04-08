@@ -8,7 +8,12 @@ abstract class NBT_SequenceTag extends NBT_Tag
   implements ArrayAccess, Countable, IteratorAggregate {
 
   public function __toString() {
-    return sprintf( '%s[%s]', parent::__toString(), implode( ', ', $this->_data ) );
+    if( !is_null( $this->_name ) ) {
+      return sprintf( '%s(%s:[%d])', get_class( $this ), $this->_name->get(),
+        count( $this->get() ) );
+    } else {
+      return sprintf( '%s([%d])', get_class( $this ), count( $this->get() ) );
+    }
   }
 
   public function count() {
@@ -28,6 +33,7 @@ abstract class NBT_SequenceTag extends NBT_Tag
     if( $this->offsetExists( $offset ) ) {
       return $this->_data[$offset];
     } else {
+      var_dump( array_keys( $this->_data ) );
       throw new NBT_Tag_Exception( "Invalid offset: {$offset}" );
     }
   }

@@ -18,9 +18,10 @@ abstract class NBT_Tag {
   const TYPE_LIST       = 9;
   const TYPE_COMPOUND   = 10;
 
-  protected $_type  = null;
-  protected $_name  = null;
-  protected $_data  = null;
+  static protected $_tagType  = null;
+  protected $_type            = null;
+  protected $_name            = null;
+  protected $_data            = null;
 
   static public function getTypeClass( $type ) {
     switch( $type ) {
@@ -31,7 +32,7 @@ abstract class NBT_Tag {
         return 'NBT_Tag_Byte';
         break;
       case self::TYPE_SHORT:
-        return 'NBT_Tag_Byte';
+        return 'NBT_Tag_Short';
         break;
       case self::TYPE_INT:
         return 'NBT_Tag_Int';
@@ -40,10 +41,10 @@ abstract class NBT_Tag {
         return 'NBT_Tag_Long';
         break;
       case self::TYPE_FLOAT:
-        return 'NBT_Tag_Long';
+        return 'NBT_Tag_Float';
         break;
       case self::TYPE_DOUBLE:
-        return 'NBT_Tag_Long';
+        return 'NBT_Tag_Double';
         break;
       case self::TYPE_BYTE_ARRAY;
         return 'NBT_Tag_ByteArray';
@@ -63,7 +64,7 @@ abstract class NBT_Tag {
   }
 
   public function __construct( $data, $name = null ) {
-    $this->_type = new NBT_Tag_Byte( $this->getType() );
+    $this->_type = new NBT_Tag_Byte( $this->getTypeId() );
     $this->set( $data );
     if( !is_null( $name ) ) {
       if( $name instanceof NBT_Tag_String ) {
@@ -75,11 +76,11 @@ abstract class NBT_Tag {
   }
 
   public function __toString() {
-
     if( !is_null( $this->_name ) ) {
-      return sprintf( '%s(%s)', get_class( $this ), $this->_name->get() );
+      return sprintf( '%s(%s:%s)', get_class( $this ), $this->_name->get(),
+        $this->get() );
     } else {
-      return sprintf( '%s()', get_class( $this ) );
+      return sprintf( '%s(%s)', get_class( $this ), $this->get() );
     }
   }
 
@@ -87,7 +88,11 @@ abstract class NBT_Tag {
     return $this->_data;
   }
 
-  public function getType() {
+  public function getName() {
+    return is_null( $this->_name ) ? null : $this->_name->get();
+  }
+
+  public function getTypeId() {
     return static::$_tagType;
   }
 

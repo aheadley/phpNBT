@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_Int extends NBT_FiniteTag {
-  static protected $_tagType = NBT_Tag::TYPE_INT;
+  static protected $_tagType  = self::TYPE_INT;
 
   static public function getStructFormat() {
     return 'N';

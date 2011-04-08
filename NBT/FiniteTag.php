@@ -15,7 +15,7 @@ abstract class NBT_FiniteTag extends NBT_Tag {
 
   static public function parse( $handle, $hasName = true ) {
     if( $hasName ) {
-      $name = NBT_Tag_String::parse( $handle );
+      $name = NBT_Tag_String::parse( $handle, false );
     } else {
       $name = null;
     }
@@ -25,8 +25,10 @@ abstract class NBT_FiniteTag extends NBT_Tag {
     return new $tagClass( $data, $name );
   }
 
-  public function write( $handle ) {
-    parent::write( $handle );
+  public function write( $handle, $writeType = true ) {
+    if( $writeType ) {
+      parent::write( $handle );
+    }
     if( !fwrite( $handle, pack( static::getStructFormat(), $this->_data ) ) ) {
       throw new NBT_Tag_Exception( "Failed to write tag data: {$this->_data}" );
     }

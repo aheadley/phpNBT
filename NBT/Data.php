@@ -7,36 +7,37 @@
 class NBT_Data {
   const VERSION_GZIP    = 1;
   const VERSION_ZLIB    = 2;
-  private $_data              = null;
-  private $_handle            = null;
-  private $_handlePosition    = null;
-  private $_compressionMethod = null;
+  private $_data        = array();
+  private $_position    = null;
 
-  public function __construct( $handle,
-                                 $compressionMethod = self::VERSION_GZIP ) {
-    $this->_handle = &$handle;
-    $this->_handlePosition = ftell( $this->_handle );
-    $this->_compressionMethod = $compressionMethod;
-    $this->_parse();
+  public function __construct( $handle ) {
+    $this->_position = ftell( $handle );
+    $this->_parse( $handle );
   }
 
   public function __toString() {
-    return "NBT_Data:{$this->_compressionMethod}({$this->_data})";
+    return "NBT_Data({$this->_data})";
   }
 
-  private function _parse() {
-    while( !feof( $this->_handle ) ) {
-      $tagType = $this->_getNextTagType();
+  public function getData() {
+    return $this->_data;
+  }
+
+  public function write( $handle ) {
+    fseek( $handle, $this->_position );
+    $this->_data->write( $handle );
+  }
+
+  private function _parse( $handle ) {
+    while( !feof( $handle ) ) {
+      $tagType = NBT_Tag::getTypeClass(
+        NBT_Tag_Byte::parse( $handle, false )->get() );
       if( $tagType !== 'NBT_Tag_End' ) {
-        $this->_data[] = $tagType::parse( $this->_handle, true );
+        $this->_data[] = $tagType::parse( $handle, true );
       } else {
         $this->_data[] = new NBT_Tag_End();
         break;
       }
     }
-  }
-
-  private function _getNextTagType() {
-    return NBT_Tag::getTypeClass( NBT_Tag_Byte::parse( $this->_handle, false )->get() );
   }
 }

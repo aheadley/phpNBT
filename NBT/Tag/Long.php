@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_Long extends NBT_Tag {
-  static protected $_tagType  = NBT_Tag::TYPE_LONG;
+  static protected $_tagType  = self::TYPE_LONG;
 
   static public function getByteCount() {
     return 8;

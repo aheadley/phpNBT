@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_ByteArray extends NBT_SequenceTag {
-  static protected $_tagType  = NBT_Tag::TYPE_BYTE_ARRAY;
+  static protected $_tagType  = self::TYPE_BYTE_ARRAY;
   private $_dataLength  = null;
 
   static public function parse( $handle, $hasName = true ) {
@@ -40,8 +40,7 @@ class NBT_Tag_ByteArray extends NBT_SequenceTag {
     parent::write( $handle );
     $this->_dataLength->write( $handle );
     foreach( $this->_data as $byte ) {
-      //TODO: this is probably not write since it would include the tag type
-      $byte->write( $handle );
+      $byte->write( $handle, false );
     }
   }
 }

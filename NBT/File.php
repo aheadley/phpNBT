@@ -4,41 +4,34 @@
  *
  * @author aheadley
  */
-class NBT_File {
-  private $_data      = null;
+class NBT_File extends NBT_Data {
   private $_filename  = null;
 
   public function __construct( $filename ) {
     $this->_filename = $filename;
-    if( file_exists( $filename ) ) {
-      if( is_readable( $filename ) ) {
-        $this->_load();
+    if( file_exists( $this->_filename ) ) {
+      if( is_readable( $this->_filename ) ) {
+        $handle = fopen( "compress.zlib://{$this->_filename}", 'rb' );
+        parent::__construct( $handle );
+        fclose( $handle );
       } else {
         throw new NBT_Exception( "Unable to read file: {$this->_filename}" );
       }
     } else {
-      $this->_data = new NBT_Data( null, NBT_Data::VERSION_GZIP );
+      $this->_data = new NBT_Data( null );
     }
   }
 
   public function __toString() {
-    return "NBT_File({$this->_filename}, {$this->_data})";
+    return "NBT_File({$this->_filename})";
   }
 
   public function write( $filename = null ) {
     if( is_null( $filename ) ) {
       $filename = $this->_filename;
     }
-    $file = fopen( $filename, 'wb' );
-    if( !fwrite( $file, $this->_data->out() ) ) {
-      throw new NBT_File_Exception( "Failed to write file: {$this->_filename}" );
-    }
-    fclose( $file );
-  }
-
-  protected function _load() {
-    $this->_data = new NBT_Data(
-      fopen( "compress.zlib://{$this->_filename}", 'rb' ),
-        NBT_Data::VERSION_GZIP );
+    $handle = fopen( "compress.zlib://${filename}", 'wb' );
+    parent::write( $handle );
+    fclose( $handle );
   }
 }

@@ -5,7 +5,7 @@
  * @author aheadley
  */
 class NBT_Tag_Byte extends NBT_FiniteTag {
-  static protected $_tagType = NBT_Tag::TYPE_BYTE;
+  static protected $_tagType  = self::TYPE_BYTE;
   
   static public function getStructFormat() {
     return 'c';
@@ -18,7 +18,11 @@ class NBT_Tag_Byte extends NBT_FiniteTag {
   public function __construct( $data, $name = null ) {
     $this->set( $data );
     if( !is_null( $name ) ) {
-      $this->_name = new NBT_Tag_String( $name );
+      if( $name instanceof NBT_Tag_String ) {
+        $this->_name = $name;
+      } else {
+        $this->_name = new NBT_Tag_String( $name );
+      }
     }
   }
 
